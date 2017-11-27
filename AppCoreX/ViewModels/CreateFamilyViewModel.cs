@@ -39,7 +39,13 @@ namespace AppCoreX.ViewModels
             set => SetProperty(ref _selectParent, value);
         }
 
+        private int _selectedChildIndex;
 
+        public int SelectedChildIndex
+        {
+            get => _selectedChildIndex;
+            set => SetProperty(ref _selectedChildIndex, value);
+        }
         public IMvxCommand AddParent => new MvxCommand(async () =>
           {
               var newParent = await _navigationService.Navigate<ParentViewModel, Parent, Parent>(null);
@@ -66,11 +72,38 @@ namespace AppCoreX.ViewModels
             //add parent to list
             Family.Children.Add(newChild);
         });
+        public IMvxCommand EditChildMvxCommand =>new MvxCommand(async () =>
+        {
+            if(SelectedChildIndex<0)return;
+            var child = Family.Children[SelectedChildIndex];
+            var editedChild = await _navigationService.Navigate<ChildViewModel,Child, Child>(child);
+            if (editedChild == null) return;
+            Family.Children[SelectedChildIndex] = editedChild;
+        });
+        public IMvxCommand DeleteChildMvxCommand => new MvxCommand(() =>
+        {
+            if (SelectedChildIndex < 0) return;
+            Family.Children.RemoveAt(SelectedChildIndex);
+        });
 
-        public IMvxCommand<Child> SelectedChildCommand => new MvxCommand<Child>(async (child) =>
+        public IMvxCommand<Child> SelectedChildCommand => new MvxCommand<Child>((child) =>
         {
             //Family.Parents.Remove(parent);
 
+        });
+
+        public IMvxCommand SaveFamilyMvxCommand=>new MvxCommand(() =>
+        {
+            //check to make sure values are not null
+            if(string.IsNullOrEmpty(Family.LastName)||string.IsNullOrEmpty(Family.Address.City)||string.IsNullOrEmpty(Family.Address.County)||string.IsNullOrEmpty(Family.Address.State))
+                return;
+            if (Family.Parents.Count == 0 || Family.Parents.Equals(null)) return;
+            
+
+        });
+        public IMvxCommand CancelFamilyMvxCommand => new MvxCommand(() =>
+        {
+            _navigationService.Close(this);
         });
 
         public override void Prepare()
@@ -79,7 +112,7 @@ namespace AppCoreX.ViewModels
             Family = new Family
             {
                 Parents = new ObservableCollection<Parent>(),
-                Children = new List<Child>(),
+                Children = new ObservableCollection<Child>(),
                 Address = new Address()
 
             };

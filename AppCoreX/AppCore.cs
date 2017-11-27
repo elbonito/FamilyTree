@@ -1,6 +1,8 @@
 ﻿using System;
+using Acr.UserDialogs;
 using AppCore.ViewModels;
 using MvvmCross.Core.ViewModels;
+using MvvmCross.Platform;
 using MvvmCross.Platform.IoC;
 
 namespace AppCoreX
@@ -14,6 +16,7 @@ namespace AppCoreX
                 .AsInterfaces()
                 .RegisterAsLazySingleton();
 
+            Mvx.RegisterSingleton<IUserDialogs>(() => UserDialogs.Instance);
             RegisterNavigationServiceAppStart<MainViewModel>();
         }
     }

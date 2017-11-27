@@ -5,11 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Acr.UserDialogs" Version="6.5.1" />
     <PackageReference Include="Microsoft.Azure.DocumentDB.Core" Version="1.7.1" />
     <PackageReference Include="MvvmCross" Version="5.5.0" />
     <PackageReference Include="MvvmCross.Binding" Version="5.5.0" />
     <PackageReference Include="MvvmCross.Core" Version="5.5.0" />
     <PackageReference Include="MvvmCross.Platform" Version="5.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>

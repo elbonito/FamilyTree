@@ -12,7 +12,7 @@ namespace AppCoreX.Models
         public string Id { get; set; }
         public string LastName { get; set; }
         public ObservableCollection<Parent> Parents { get; set; }
-        public List<Child> Children { get; set; }
+        public ObservableCollection<Child> Children { get; set; }
         public Address Address { get; set; }
         public bool IsRegistered { get; set; }
         public override string ToString()
@@ -33,7 +33,7 @@ namespace AppCoreX.Models
         public string FirstName { get; set; }
         public string Gender { get; set; }
         public int Grade { get; set; }
-        public List<Pet> Pets { get; set; }
+        public ObservableCollection<Pet> Pets { get; set; }
     }
 
     public class Pet

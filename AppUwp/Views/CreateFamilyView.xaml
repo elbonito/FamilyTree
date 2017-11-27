@@ -39,11 +39,11 @@
             </StackPanel>
             <StackPanel Name="ChildrenStackPanel" RelativePanel.Below="StackPanelParents">
                 <StackPanel Orientation="Horizontal" Spacing="5">
-                    <Button Content="Add Child"></Button>
-                    <Button Content="Remove Child"></Button>
-                    <Button Content="Edit Child"></Button>
+                    <Button Content="Add Child" Command="{Binding AddChildCommand}"></Button>
+                    <Button Content="Remove Child" Command="{Binding DeleteChildMvxCommand}"></Button>
+                    <Button Content="Edit Child" Command="{Binding EditChildMvxCommand}"></Button>
                 </StackPanel>
-                <ListView Name="ChildListView"  RelativePanel.Below="ParentsListView" ItemsSource="{Binding Family.Children}" Height="150" >
+                <ListView Name="ChildListView"  RelativePanel.Below="ParentsListView" ItemsSource="{Binding Family.Children}" SelectedIndex="{Binding SelectedChildIndex}" Height="150" >
                     <interactivity:Interaction.Behaviors>
                         <core:EventTriggerBehavior EventName="SelectionChanged">
                             <core:InvokeCommandAction Command="{Binding SelectedChildCommand}" CommandParameter="{Binding ElementName=ChildListView, Path=SelectedItem}"></core:InvokeCommandAction>
@@ -51,18 +51,19 @@
                     </interactivity:Interaction.Behaviors>
                     <ListView.ItemTemplate >
                         <DataTemplate>
-                            <StackPanel>
-                                <controls:HeaderedTextBlock Header="Family Name" Text="{Binding Family.FamilyName}" />
+                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                <controls:HeaderedTextBlock Header="Family Name" Text="{Binding FamilyName}" />
                                 <controls:HeaderedTextBlock Header="First Name" Text="{Binding FirstName}" />
-                                <controls:HeaderedTextBlock Header="Gender" Text="{Binding Gender}" />
-                                <controls:HeaderedTextBlock Header="Grade" Text="{Binding Grade}" />
                             </StackPanel>
                         </DataTemplate>
                     </ListView.ItemTemplate>
-                    
+
                 </ListView>
             </StackPanel>
-
+            <CommandBar OverflowButtonVisibility="Collapsed" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True">
+                <AppBarButton Icon="Save" Label="Save"></AppBarButton>
+                <AppBarButton Icon="Cancel" Label="Cancel"></AppBarButton>
+            </CommandBar>
 
         </RelativePanel>
     </Grid>

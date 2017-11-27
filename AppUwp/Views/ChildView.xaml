@@ -9,7 +9,41 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-
+        <RelativePanel>
+            <StackPanel Name="StackPanelDetails">
+                <StackPanel Orientation=" Horizontal" Spacing="10">
+                    <TextBox Header="First Name" Text="{Binding Child.FirstName, Mode=TwoWay}" Width="150"></TextBox>
+                    <TextBox Header="Last Name" Text="{Binding Child.FamilyName,Mode=TwoWay}" Width="125"></TextBox>
+                </StackPanel>
+                <StackPanel>
+                    <TextBox Header="Gender" Name="Gender" Text="{Binding Child.Gender, Mode=TwoWay}"></TextBox>
+                    <TextBox Header="Grade" Name="Grade" Text="{Binding Child.Grade, Mode=TwoWay}"></TextBox>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Name="PetsStackList" RelativePanel.Below="StackPanelDetails" Spacing="10" Margin="0,10,0,0">
+                <StackPanel Orientation="Horizontal">
+                    <TextBox Header="Pet Name" Name="PetName" Text="{Binding PetName,Mode=TwoWay}" Width="200"></TextBox>
+                    <Button Command="{Binding AddPetMvxCommand}" VerticalAlignment="Bottom"><SymbolIcon>Add</SymbolIcon></Button>
+                    <Button Command="{Binding EditPetMvxCommand}" VerticalAlignment="Bottom"><SymbolIcon>Edit</SymbolIcon></Button>
+                    <Button Command="{Binding DeletePetMvxCommand}" VerticalAlignment="Bottom"><SymbolIcon>Delete</SymbolIcon></Button>
+                </StackPanel>
+                
+                <ListView ItemsSource="{Binding Child.Pets}" SelectedIndex="{Binding SelectedIndex,Mode=TwoWay}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                               <TextBlock Text="{Binding GivenName}"></TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackPanel>
+            <StackPanel RelativePanel.Below="PetsStackList" Orientation="Horizontal" Spacing="10">
+                <Button Command="{Binding SaveMvxCommand}"><SymbolIcon>Save</SymbolIcon></Button>
+                <Button Command="{Binding CancelMvxCommand}"><SymbolIcon>Cancel</SymbolIcon></Button>
+            </StackPanel>
+            
+        </RelativePanel>
     </Grid>
 </views:MvxWindowsPage>
 

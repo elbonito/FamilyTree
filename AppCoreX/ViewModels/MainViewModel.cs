@@ -80,14 +80,14 @@ namespace AppCore.ViewModels
                 new Parent { FirstName = "Thomas" },
                 new Parent { FirstName = "Mary Kay" }
                     },
-                Children = new List<Child>
+                Children = new ObservableCollection<Child>
                 {
                 new Child
                 {
                         FirstName = "Henriette Thaulow",
                         Gender = "female",
                         Grade = 5,
-                        Pets = new List<Pet>
+                        Pets = new ObservableCollection<Pet>
                         {
                                 new Pet { GivenName = "Fluffy" }
                         }
@@ -108,7 +108,7 @@ namespace AppCore.ViewModels
                 new Parent { FamilyName = "Wakefield", FirstName = "Robin" },
                 new Parent { FamilyName = "Miller", FirstName = "Ben" }
                     },
-                Children = new  List<Child>
+                Children = new ObservableCollection<Child>
                     {
                 new Child
                 {
@@ -116,7 +116,7 @@ namespace AppCore.ViewModels
                         FirstName = "Jesse",
                         Gender = "female",
                         Grade = 8,
-                        Pets = new List<Pet>
+                        Pets = new ObservableCollection<Pet>
                         {
                                 new Pet { GivenName = "Goofy" },
                                 new Pet { GivenName = "Shadow" }
