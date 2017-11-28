@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
+using AppCoreX.Interface;
 using AppCoreX.Models;
 using MvvmCross.Core.Navigation;
 using MvvmCross.Core.ViewModels;
@@ -11,11 +12,22 @@ namespace AppCoreX.ViewModels
     public class CreateFamilyViewModel : MvxViewModel
     {
         private readonly IMvxNavigationService _navigationService;
+        private readonly IComosDBService _comosDbService;
         private Family _family;
 
-        public CreateFamilyViewModel(IMvxNavigationService navigationService)
+        public CreateFamilyViewModel(IMvxNavigationService navigationService, IComosDBService comosDbService)
         {
             _navigationService = navigationService;
+            _comosDbService = comosDbService;
+        }
+        private string _familyName;
+
+        public string FamilyName
+        {
+            get => _familyName;
+            set { SetProperty(ref _familyName, value);
+                Family.LastName = value;
+            }
         }
 
         public Family Family
@@ -48,16 +60,16 @@ namespace AppCoreX.ViewModels
         }
         public IMvxCommand AddParent => new MvxCommand(async () =>
           {
-              var newParent = await _navigationService.Navigate<ParentViewModel, Parent, Parent>(null);
+              var newParent = await _navigationService.Navigate<ParentViewModel, Parent, Parent>(new Parent{FamilyName = FamilyName});
               if (newParent == null) return;
               //add parent to list
               Family.Parents.Add(newParent);
           });
         public IMvxCommand EditParentCommand => new MvxCommand(async () =>
           {
-            //todo when the parentviewmodel closes tempParent remains, so instead of remove i should replace by also storing the
-            //index of the current selected item.
-            if (SelectedParent == null) return;
+              //todo when the parentviewmodel closes tempParent remains, so instead of remove i should replace by also storing the
+              //index of the current selected item.
+              if (SelectedParent == null) return;
               var tempParent = SelectedParent;
               Family.Parents.Remove(SelectedParent);
               var editedParent = await _navigationService.Navigate<ParentViewModel, Parent, Parent>(tempParent);
@@ -67,19 +79,19 @@ namespace AppCoreX.ViewModels
 
         public IMvxCommand AddChildCommand => new MvxCommand(async () =>
         {
-            var newChild = await _navigationService.Navigate<ChildViewModel, Child, Child>(null);
+            var newChild = await _navigationService.Navigate<ChildViewModel, Child, Child>(new Child{FamilyName = FamilyName});
             if (newChild == null) return;
             //add parent to list
             Family.Children.Add(newChild);
         });
-        public IMvxCommand EditChildMvxCommand =>new MvxCommand(async () =>
-        {
-            if(SelectedChildIndex<0)return;
-            var child = Family.Children[SelectedChildIndex];
-            var editedChild = await _navigationService.Navigate<ChildViewModel,Child, Child>(child);
-            if (editedChild == null) return;
-            Family.Children[SelectedChildIndex] = editedChild;
-        });
+        public IMvxCommand EditChildMvxCommand => new MvxCommand(async () =>
+         {
+             if (SelectedChildIndex < 0) return;
+             var child = Family.Children[SelectedChildIndex];
+             var editedChild = await _navigationService.Navigate<ChildViewModel, Child, Child>(child);
+             if (editedChild == null) return;
+             Family.Children[SelectedChildIndex] = editedChild;
+         });
         public IMvxCommand DeleteChildMvxCommand => new MvxCommand(() =>
         {
             if (SelectedChildIndex < 0) return;
@@ -92,15 +104,19 @@ namespace AppCoreX.ViewModels
 
         });
 
-        public IMvxCommand SaveFamilyMvxCommand=>new MvxCommand(() =>
-        {
-            //check to make sure values are not null
-            if(string.IsNullOrEmpty(Family.LastName)||string.IsNullOrEmpty(Family.Address.City)||string.IsNullOrEmpty(Family.Address.County)||string.IsNullOrEmpty(Family.Address.State))
-                return;
-            if (Family.Parents.Count == 0 || Family.Parents.Equals(null)) return;
-            
+        public IMvxCommand SaveFamilyMvxCommand => new MvxCommand(async () =>
+          {
+              //check to make sure values are not null
+              if (string.IsNullOrEmpty(Family.LastName) || string.IsNullOrEmpty(Family.Address.City) || string.IsNullOrEmpty(Family.Address.County) || string.IsNullOrEmpty(Family.Address.State))
+                  return;
+              if (Family.Parents.Count == 0 || Family.Parents.Equals(null)) return;
+              //create id for family instead of lastname plus number im using guid
+              Family.Id = Guid.NewGuid().ToString();
+              await _comosDbService.CreateFamilyDocumentIfNotExists(Family);
+              await _navigationService.Close(this);
 
-        });
+
+          });
         public IMvxCommand CancelFamilyMvxCommand => new MvxCommand(() =>
         {
             _navigationService.Close(this);

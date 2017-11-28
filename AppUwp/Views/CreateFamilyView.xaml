@@ -13,14 +13,17 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <RelativePanel>
+            <StackPanel Name="LastNameStackPanel">
+                <TextBox Header="FamilyName" Text="{Binding FamilyName,Mode=TwoWay}" Width="200"></TextBox>
+            </StackPanel>
 
-            <StackPanel Name="AddressStackPanel" Orientation="Horizontal" Spacing="10">
+            <StackPanel Name="AddressStackPanel" Orientation="Horizontal" Spacing="10" RelativePanel.Below="LastNameStackPanel" Margin="0,10,0,0">
                 <TextBox Header="County" PlaceholderText="Enter county" Width="150" Text="{Binding Family.Address.County,Mode=TwoWay}"></TextBox>
                 <TextBox Header="City" PlaceholderText="Enter City" Width="150" Text="{Binding Family.Address.City,Mode=TwoWay}"></TextBox>
                 <TextBox Header="State" PlaceholderText="Enter State" Text="{Binding Family.Address.State,Mode=TwoWay}" />
 
             </StackPanel>
-            <StackPanel Name="StackPanelParents" RelativePanel.Below="AddressStackPanel">
+            <StackPanel Name="StackPanelParents" RelativePanel.Below="AddressStackPanel" Margin="0,10,0,0">
                 <StackPanel Orientation="Horizontal" Spacing="5">
                     <Button Content="Add Parent" Command="{Binding AddParent}"></Button>
                     <Button Content="Edit Parent" Command="{Binding EditParentCommand}"></Button>
@@ -37,7 +40,7 @@
                     </ListView.ItemTemplate>
                 </ListView>
             </StackPanel>
-            <StackPanel Name="ChildrenStackPanel" RelativePanel.Below="StackPanelParents">
+            <StackPanel Name="ChildrenStackPanel" RelativePanel.Below="StackPanelParents" Margin="0,10,0,0">
                 <StackPanel Orientation="Horizontal" Spacing="5">
                     <Button Content="Add Child" Command="{Binding AddChildCommand}"></Button>
                     <Button Content="Remove Child" Command="{Binding DeleteChildMvxCommand}"></Button>
@@ -61,8 +64,8 @@
                 </ListView>
             </StackPanel>
             <CommandBar OverflowButtonVisibility="Collapsed" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True">
-                <AppBarButton Icon="Save" Label="Save"></AppBarButton>
-                <AppBarButton Icon="Cancel" Label="Cancel"></AppBarButton>
+                <AppBarButton Icon="Save" Label="Save" Command="{Binding SaveFamilyMvxCommand}"></AppBarButton>
+                <AppBarButton Icon="Cancel" Label="Cancel" Command="{Binding CancelFamilyMvxCommand}"></AppBarButton>
             </CommandBar>
 
         </RelativePanel>

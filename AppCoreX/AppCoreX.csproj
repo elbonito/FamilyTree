@@ -13,8 +13,4 @@
     <PackageReference Include="MvvmCross.Platform" Version="5.5.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
-
 </Project>
