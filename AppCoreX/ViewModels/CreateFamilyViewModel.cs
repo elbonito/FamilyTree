@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
+using Acr.UserDialogs;
 using AppCoreX.Interface;
 using AppCoreX.Models;
 using MvvmCross.Core.Navigation;
@@ -13,10 +14,12 @@ namespace AppCoreX.ViewModels
     {
         private readonly IMvxNavigationService _navigationService;
         private readonly IComosDBService _comosDbService;
+        private readonly IUserDialogs _userDialogs;
         private Family _family;
 
-        public CreateFamilyViewModel(IMvxNavigationService navigationService, IComosDBService comosDbService)
+        public CreateFamilyViewModel(IMvxNavigationService navigationService, IComosDBService comosDbService, IUserDialogs dialogs)
         {
+            _userDialogs = dialogs;
             _navigationService = navigationService;
             _comosDbService = comosDbService;
         }
@@ -25,7 +28,9 @@ namespace AppCoreX.ViewModels
         public string FamilyName
         {
             get => _familyName;
-            set { SetProperty(ref _familyName, value);
+            set
+            {
+                SetProperty(ref _familyName, value);
                 Family.LastName = value;
             }
         }
@@ -60,7 +65,7 @@ namespace AppCoreX.ViewModels
         }
         public IMvxCommand AddParent => new MvxCommand(async () =>
           {
-              var newParent = await _navigationService.Navigate<ParentViewModel, Parent, Parent>(new Parent{FamilyName = FamilyName});
+              var newParent = await _navigationService.Navigate<ParentViewModel, Parent, Parent>(new Parent { FamilyName = FamilyName });
               if (newParent == null) return;
               //add parent to list
               Family.Parents.Add(newParent);
@@ -79,7 +84,7 @@ namespace AppCoreX.ViewModels
 
         public IMvxCommand AddChildCommand => new MvxCommand(async () =>
         {
-            var newChild = await _navigationService.Navigate<ChildViewModel, Child, Child>(new Child{FamilyName = FamilyName});
+            var newChild = await _navigationService.Navigate<ChildViewModel, Child, Child>(new Child { FamilyName = FamilyName });
             if (newChild == null) return;
             //add parent to list
             Family.Children.Add(newChild);
@@ -107,14 +112,22 @@ namespace AppCoreX.ViewModels
         public IMvxCommand SaveFamilyMvxCommand => new MvxCommand(async () =>
           {
               //check to make sure values are not null
-              if (string.IsNullOrEmpty(Family.LastName) || string.IsNullOrEmpty(Family.Address.City) || string.IsNullOrEmpty(Family.Address.County) || string.IsNullOrEmpty(Family.Address.State))
+              if (string.IsNullOrEmpty(Family.LastName) || string.IsNullOrEmpty(Family.Address.City) ||
+                  string.IsNullOrEmpty(Family.Address.County) || string.IsNullOrEmpty(Family.Address.State))
+              {
+                  await _userDialogs.AlertAsync("Family Name, County, City, State Cannot be Empty", "Attention Required Family");
                   return;
-              if (Family.Parents.Count == 0 || Family.Parents.Equals(null)) return;
+              }
+
+              if (Family.Parents.Count == 0 || Family.Parents.Equals(null))
+              {
+                  await _userDialogs.AlertAsync("Must have at least one parent", "Attention Required Family");
+                  return;
+              }
               //create id for family instead of lastname plus number im using guid
               Family.Id = Guid.NewGuid().ToString();
               await _comosDbService.CreateFamilyDocumentIfNotExists(Family);
               await _navigationService.Close(this);
-
 
           });
         public IMvxCommand CancelFamilyMvxCommand => new MvxCommand(() =>
