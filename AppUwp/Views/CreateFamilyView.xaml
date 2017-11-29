@@ -65,6 +65,8 @@
             </StackPanel>
             <CommandBar OverflowButtonVisibility="Collapsed" RelativePanel.AlignBottomWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True">
                 <AppBarButton Icon="Save" Label="Save" Command="{Binding SaveFamilyMvxCommand}"></AppBarButton>
+                <AppBarButton Icon="Edit" Label="Edit" Command="{Binding EditFamilyMvxCommand}" Visibility="{Binding CanEdit}"></AppBarButton>
+                <AppBarButton Icon="Delete" Label="Delete" Command="{Binding DeleteFamilyMvxCommand}" Visibility="{Binding CanEdit}"></AppBarButton>
                 <AppBarButton Icon="Cancel" Label="Cancel" Command="{Binding CancelFamilyMvxCommand}"></AppBarButton>
             </CommandBar>
 

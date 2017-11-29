@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using AppCoreX.Interface;
 using AppCoreX.Models;
 using AppCoreX.ViewModels;
 using Microsoft.Azure.Documents;
@@ -18,6 +19,7 @@ namespace AppCore.ViewModels
     public class MainViewModel : MvxViewModel
     {
         private readonly IMvxNavigationService _navigationService;
+        private readonly IComosDBService _comosDbService;
 
         #region OldCodeTutorial
         //private const string EndpointUri = "https://appx.documents.azure.com:443/";
@@ -27,8 +29,9 @@ namespace AppCore.ViewModels
 
         private string _hello;
 
-        public MainViewModel(IMvxNavigationService navigationService)
+        public MainViewModel(IMvxNavigationService navigationService, IComosDBService comosDbService)
         {
+            _comosDbService = comosDbService;
             _navigationService = navigationService;
         }
 
@@ -42,6 +45,10 @@ namespace AppCore.ViewModels
         {
            await _navigationService.Navigate<CreateFamilyViewModel>();
         }); 
+        public IMvxCommand SearchMvxCommand=>new MvxCommand(async () =>
+        {
+            await _navigationService.Navigate<SearchFamilyViewModel>();
+        });
 
         public override void Prepare()
         {

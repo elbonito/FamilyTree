@@ -10,7 +10,7 @@ using MvvmCross.Core.ViewModels;
 
 namespace AppCoreX.ViewModels
 {
-    public class CreateFamilyViewModel : MvxViewModel
+    public class CreateFamilyViewModel : MvxViewModel<Family>
     {
         private readonly IMvxNavigationService _navigationService;
         private readonly IComosDBService _comosDbService;
@@ -134,6 +134,28 @@ namespace AppCoreX.ViewModels
         {
             _navigationService.Close(this);
         });
+        public IMvxCommand EditFamilyMvxCommand => new MvxCommand(async () =>
+        {
+            if (string.IsNullOrEmpty(Family.Id) || Family == null) return;
+            await _comosDbService.ReplaceFamilyDocument(Family);
+            await _navigationService.Close(this);
+
+        });
+        public IMvxCommand DeleteFamilyMvxCommand => new MvxCommand(async () =>
+        {
+            if (string.IsNullOrEmpty(Family.Id) || Family == null) return;
+            await _comosDbService.DeleteFamilyDocument(Family.Id);
+            await _navigationService.Close(this);
+
+        });
+
+        private bool _canEdit;
+
+        public bool CanEdit
+        {
+            get => _canEdit;
+            set => SetProperty(ref _canEdit, value);
+        }
 
         public override void Prepare()
         {
@@ -145,6 +167,13 @@ namespace AppCoreX.ViewModels
                 Address = new Address()
 
             };
+        }
+
+        public override void Prepare(Family family)
+        {
+            Family = family;
+            FamilyName = family.LastName;
+            CanEdit = !string.IsNullOrEmpty(Family.Id);
         }
     }
 }
