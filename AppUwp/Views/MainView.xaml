@@ -9,6 +9,8 @@
     mc:Ignorable="d">
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <StackPanel Margin="20" HorizontalAlignment="Center" Width="500" Height="250" VerticalAlignment="Center">
+            
+            <Button Content="Database Management" Command="{Binding DatabaseMvxCommand}" FontSize="25" HorizontalAlignment="Stretch"></Button>
             <Button Content="Add Family" Command="{Binding AddFamilyCommand}" FontSize="25" HorizontalAlignment="Stretch"></Button>
             <Button Content="Search Family" Command="{Binding SearchMvxCommand}" FontSize="25" HorizontalAlignment="Stretch"></Button>
         </StackPanel>

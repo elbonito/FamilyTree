@@ -99,6 +99,9 @@
     <Compile Include="Views\ChildView.xaml.cs">
       <DependentUpon>ChildView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\DatabaseManagementView.xaml.cs">
+      <DependentUpon>DatabaseManagementView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ParentView.xaml.cs">
       <DependentUpon>ParentView.xaml</DependentUpon>
     </Compile>
@@ -135,6 +138,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="Views\ChildView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\DatabaseManagementView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

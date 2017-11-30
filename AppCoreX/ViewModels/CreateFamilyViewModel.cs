@@ -126,7 +126,7 @@ namespace AppCoreX.ViewModels
               }
               //create id for family instead of lastname plus number im using guid
               Family.Id = Guid.NewGuid().ToString();
-              await _comosDbService.CreateFamilyDocumentIfNotExists(Family);
+              await _comosDbService.CreateFamilyDocumentIfNotExistsAsync(Family);
               await _navigationService.Close(this);
 
           });
@@ -137,14 +137,14 @@ namespace AppCoreX.ViewModels
         public IMvxCommand EditFamilyMvxCommand => new MvxCommand(async () =>
         {
             if (string.IsNullOrEmpty(Family.Id) || Family == null) return;
-            await _comosDbService.ReplaceFamilyDocument(Family);
+            await _comosDbService.ReplaceFamilyDocumentAsync(Family);
             await _navigationService.Close(this);
 
         });
         public IMvxCommand DeleteFamilyMvxCommand => new MvxCommand(async () =>
         {
             if (string.IsNullOrEmpty(Family.Id) || Family == null) return;
-            await _comosDbService.DeleteFamilyDocument(Family.Id);
+            await _comosDbService.DeleteFamilyDocumentAsync(Family.Id);
             await _navigationService.Close(this);
 
         });

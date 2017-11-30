@@ -1,0 +1,48 @@
+﻿<views:MvxWindowsPage
+    xmlns:views="using:MvvmCross.Uwp.Views"
+    x:Class="AppUwp.Views.DatabaseManagementView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:AppUwp.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <RelativePanel Margin="10,10,10,10">
+            <StackPanel Name="DatabaseStackpanel" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True" Spacing="10">
+                <TextBox Header="Database Name" Text="{Binding DatabaseName, Mode=TwoWay}"></TextBox>
+                <Button Content="Create Databse" HorizontalAlignment="Stretch" Command="{Binding AddDatabaseMvxCommand}"></Button>
+                <Button Content="Delete Databse" HorizontalAlignment="Stretch" Command="{Binding DeleteDatabaseMvxCommand}"></Button>
+                <ListView BorderThickness="2" BorderBrush="Black" Height="150" ItemsSource="{Binding Databases}" SelectedItem="{Binding SelectedDatabase, Mode=TwoWay}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <TextBlock Text="{Binding Id}" HorizontalAlignment="Stretch"></TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+                <ListView BorderThickness="2" BorderBrush="Black" Height="150" ItemsSource="{Binding DocumentCollections}" SelectedItem="{Binding SelectedDocumentCollection,Mode=TwoWay}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel >
+                                <TextBlock Text="{Binding Id}" HorizontalAlignment="Stretch"></TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+
+                <TextBox Header="Document Collection Name" Text="{Binding DocumentName,Mode=TwoWay}"></TextBox>
+                <Button HorizontalAlignment="Stretch" Content="Create Document" Command="{Binding AddCollectionMvxCommand}"></Button>
+                <Button HorizontalAlignment="Stretch" Content="Delete Document" Command="{Binding DeleteCollectionMvxCommand}"></Button>
+            </StackPanel>
+            <StackPanel Name="DatatbaseListviewStack" RelativePanel.Below="DatabaseStackpanel" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True">
+
+            </StackPanel>
+
+
+        </RelativePanel>
+    </Grid>
+</views:MvxWindowsPage>
