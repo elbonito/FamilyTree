@@ -7,6 +7,7 @@ using AppCoreX.Services;
 using MvvmCross.Core.ViewModels;
 using MvvmCross.Platform;
 using MvvmCross.Platform.IoC;
+using MvvmCross.Platform.Platform;
 using Plugin.Settings.Abstractions;
 
 namespace AppCoreX
@@ -22,6 +23,7 @@ namespace AppCoreX
 
             Mvx.RegisterSingleton<IUserDialogs>(() => UserDialogs.Instance);
             Mvx.LazyConstructAndRegisterSingleton<IComosDBService,CosmosDBService>();
+            Mvx.LazyConstructAndRegisterSingleton<IMvxTrace,DebugTrace>();
            Mvx.RegisterType<IAppSettings,AppSettings>();
             RegisterNavigationServiceAppStart<MainViewModel>();
         }

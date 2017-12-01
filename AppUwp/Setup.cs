@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Controls;
+using AppCoreX.Helpers;
 using MvvmCross.Core.ViewModels;
 using MvvmCross.Platform;
 using MvvmCross.Platform.Logging;
+using MvvmCross.Platform.Platform;
 using MvvmCross.Uwp.Platform;
 using Plugin.Settings;
 using Plugin.Settings.Abstractions;
@@ -34,6 +36,10 @@ namespace AppUwp
         protected override MvxLogProviderType GetDefaultLogProviderType()
         {
             return MvxLogProviderType.None;
+        }
+        protected override IMvxTrace CreateDebugTrace()
+        {
+            return new DebugTrace();
         }
     }
 }

@@ -14,6 +14,8 @@ using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using MvvmCross.Core.Navigation;
 using MvvmCross.Core.ViewModels;
+using MvvmCross.Platform.Logging;
+using MvvmCross.Platform.Platform;
 
 namespace AppCore.ViewModels
 {
@@ -22,14 +24,16 @@ namespace AppCore.ViewModels
         private readonly IMvxNavigationService _navigationService;
         private readonly IComosDBService _comosDbService;
         private readonly IAppSettings _appSettings;
+        private readonly IMvxTrace _log;
 
         private string _hello;
 
-        public MainViewModel(IMvxNavigationService navigationService, IComosDBService comosDbService, IAppSettings appSettings)
+        public MainViewModel(IMvxNavigationService navigationService, IComosDBService comosDbService, IAppSettings appSettings, IMvxTrace log)
         {
             _comosDbService = comosDbService;
             _navigationService = navigationService;
             _appSettings = appSettings;
+            _log = log;
         }
 
         public string Hello
@@ -54,6 +58,7 @@ namespace AppCore.ViewModels
         public override void Prepare()
         {
             Hello = "On Prepare";
+            _log.Trace(MvxTraceLevel.Diagnostic,"hello","hello");
             //if need to generate run class
             //var generate = new TutorialCode();
             //generate.Run();
