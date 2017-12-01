@@ -23,7 +23,6 @@ namespace AppCoreX.Services
             _client = new DocumentClient(new Uri(TextConstants.EndpointUri), TextConstants.PrimaryKey);
         }
 
-
         public Task<ObservableCollection<Family>> ExecuteSimpleQuery(string lastName)
         {
 

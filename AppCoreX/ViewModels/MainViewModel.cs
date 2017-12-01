@@ -21,30 +21,32 @@ namespace AppCore.ViewModels
     {
         private readonly IMvxNavigationService _navigationService;
         private readonly IComosDBService _comosDbService;
+        private readonly IAppSettings _appSettings;
 
         private string _hello;
 
-        public MainViewModel(IMvxNavigationService navigationService, IComosDBService comosDbService)
+        public MainViewModel(IMvxNavigationService navigationService, IComosDBService comosDbService, IAppSettings appSettings)
         {
             _comosDbService = comosDbService;
             _navigationService = navigationService;
+            _appSettings = appSettings;
         }
 
         public string Hello
         {
             get => _hello;
             set => SetProperty(ref _hello, value);
-            
+
         }
 
-        public IMvxCommand AddFamilyCommand =>new MvxCommand(async () =>
-        {
-           await _navigationService.Navigate<CreateFamilyViewModel>();
-        }); 
-        public IMvxCommand SearchMvxCommand=>new MvxCommand(async () =>
-        {
-            await _navigationService.Navigate<SearchFamilyViewModel>();
-        });
+        public IMvxCommand AddFamilyCommand => new MvxCommand(async () =>
+         {
+             await _navigationService.Navigate<CreateFamilyViewModel>();
+         });
+        public IMvxCommand SearchMvxCommand => new MvxCommand(async () =>
+          {
+              await _navigationService.Navigate<SearchFamilyViewModel>();
+          });
         public IMvxCommand DatabaseMvxCommand => new MvxCommand(async () =>
         {
             await _navigationService.Navigate<DatabaseManagementViewModel>();
@@ -55,9 +57,18 @@ namespace AppCore.ViewModels
             //if need to generate run class
             //var generate = new TutorialCode();
             //generate.Run();
+            //check saved settings
+            //set defaultdatabase
+            TextConstants.DatabaseName = TextConstants.DefaultDatabaseName;
+            TextConstants.CollectionName = TextConstants.DefaultCollectionName;
+
+            if (string.IsNullOrEmpty(_appSettings.DatabaseName) ||
+                string.IsNullOrEmpty(_appSettings.DocumentCollectionName)) return;
+            TextConstants.DatabaseName = _appSettings.DatabaseName;
+            TextConstants.CollectionName = _appSettings.DocumentCollectionName;
 
         }
 
-}
+    }
 
 }

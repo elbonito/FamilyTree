@@ -41,6 +41,11 @@
             <StackPanel Name="DatatbaseListviewStack" RelativePanel.Below="DatabaseStackpanel" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignLeftWithPanel="True">
 
             </StackPanel>
+            
+            <CommandBar RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignBottomWithPanel="True">
+                <AppBarButton Icon="Save" Command="{Binding SaveMvxCommand}"></AppBarButton>
+                <AppBarButton Icon="Cancel" Command="{Binding CancelMvxCommand}"></AppBarButton>
+            </CommandBar>
 
 
         </RelativePanel>

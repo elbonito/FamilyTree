@@ -103,6 +103,7 @@ namespace AppCoreX.ViewModels
         public override void Prepare(Child child)
         {
             Child = child ?? new Child() { Pets = new ObservableCollection<Pet>() };
+            Child.Pets = child?.Pets ?? new ObservableCollection<Pet>();
         }
     }
 }

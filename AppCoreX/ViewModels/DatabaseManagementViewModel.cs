@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using Acr.UserDialogs;
+using AppCoreX.Helpers;
 using AppCoreX.Interface;
 using Microsoft.Azure.Documents;
 using MvvmCross.Core.Navigation;
@@ -15,6 +16,7 @@ namespace AppCoreX.ViewModels
         private readonly IMvxNavigationService _navigationService;
         private readonly IUserDialogs _userDialogs;
         private readonly IComosDBService _comosDbService;
+        private readonly IAppSettings _appSettings;
 
         private string _documentName;
 
@@ -79,7 +81,9 @@ namespace AppCoreX.ViewModels
         public IMvxCommand AddCollectionMvxCommand => new MvxCommand(async () =>
         {
             if (string.IsNullOrEmpty(DocumentName) || SelectedDatabase == null) return;
+            _userDialogs.ShowLoading(TextConstants.AddingMessage);
             await _comosDbService.CreateDocumentCollectionAsync(SelectedDatabase.Id, DocumentName);
+            _userDialogs.HideLoading();
             DocumentCollections = null;
             GetCollectionList();
             DocumentName = null;
@@ -87,8 +91,10 @@ namespace AppCoreX.ViewModels
         });
         public IMvxCommand DeleteCollectionMvxCommand => new MvxCommand(async () =>
         {
-            if (SelectedDocumentCollection==null || SelectedDatabase == null) return;
+            if (SelectedDocumentCollection == null || SelectedDatabase == null) return;
+            _userDialogs.ShowLoading(TextConstants.DeletingMessage);
             await _comosDbService.DeleteDocumentCollectionAsync(SelectedDocumentCollection.SelfLink);
+            _userDialogs.HideLoading();
             DocumentCollections = null;
             GetCollectionList();
             DocumentName = null;
@@ -97,29 +103,54 @@ namespace AppCoreX.ViewModels
         public IMvxCommand AddDatabaseMvxCommand => new MvxCommand(async () =>
         {
             if (string.IsNullOrEmpty(DatabaseName)) return;
-            await _comosDbService.CreateDatabaseAsync(DatabaseName);
+            _userDialogs.ShowLoading(TextConstants.AddingMessage);
+            var result = await _comosDbService.CreateDatabaseAsync(DatabaseName);
+            _userDialogs.HideLoading();
             DocumentCollections = null;
             RetrieveDatabases();
             DatabaseName = null;
+
         });
 
         public IMvxCommand DeleteDatabaseMvxCommand => new MvxCommand(async () =>
         {
             if (SelectedDatabase == null) return;
+            _userDialogs.ShowLoading(TextConstants.DeletingMessage);
             await _comosDbService.DeleteDatabaseAsync(SelectedDatabase.Id);
+            //delete settings
+            _appSettings.DocumentCollectionName = _appSettings.DatabaseName = null;
             DocumentCollections = null;
             RetrieveDatabases();
+            SelectedDatabase = null;
+            _userDialogs.HideLoading();
+
+        });
+
+        public IMvxCommand SaveMvxCommand => new MvxCommand(async () =>
+        {
+            if (SelectedDatabase == null && SelectedDocumentCollection == null) return;
+            _userDialogs.ShowLoading(TextConstants.SavingMessage);
+            TextConstants.DatabaseName = _appSettings.DatabaseName = SelectedDatabase?.Id ?? TextConstants.DefaultDatabaseName;
+            TextConstants.CollectionName = _appSettings.DocumentCollectionName = SelectedDocumentCollection?.Id ?? TextConstants.DefaultCollectionName;
+            await _navigationService.Close(this);
+            DocumentCollections = null;
+            SelectedDatabase = null;
+
+        });
+        public IMvxCommand CancelMvxCommand => new MvxCommand(async () =>
+        {
+            await _navigationService.Close(this);
+            DocumentCollections = null;
             SelectedDatabase = null;
 
         });
 
-
-
-        public DatabaseManagementViewModel(IMvxNavigationService navigationService, IUserDialogs userDialogs, IComosDBService comosDbService)
+        public DatabaseManagementViewModel(IMvxNavigationService navigationService, IUserDialogs userDialogs, IComosDBService comosDbService, IAppSettings appSettings)
         {
             _navigationService = navigationService;
             _userDialogs = userDialogs;
             _comosDbService = comosDbService;
+            _appSettings = appSettings;
         }
 
         public override void Prepare()
